@@ -5,9 +5,13 @@
     system = "x86_64-linux"; # Hjem only supports NixOS currently
     pkgs = import nixpkgs {inherit system;};
   in {
-    hjemModules.${system}.default = import ./default.nix {
-      inherit (nixpkgs) lib;
-      inherit pkgs inputs;
+    hjemModules.${system} = rec {
+      tsunami = import ./default.nix {
+        inherit (nixpkgs) lib;
+        inherit pkgs inputs;
+        tsunamiLib = import ./lib.nix;
+      };
+      default = tsunami;
     };
   };
 }
