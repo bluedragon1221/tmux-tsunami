@@ -6,16 +6,7 @@
 }: let
   inherit (lib) mkOption mkEnableOption;
 in {
-  imports = [
-    ./keys.nix
-    ./sessionizer.nix
-    ./lazygit.nix
-    ./defaultGlobalKeys.nix
-    ./findFile.nix
-    ./fzfExec.nix
-    ./defaultLeaderMenu.nix
-    ./bar.nix
-  ];
+  imports = lib.filesystem.listFilesRecursive ./common;
 
   options = {
     tsunami = {
