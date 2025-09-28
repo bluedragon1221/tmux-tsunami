@@ -1,5 +1,11 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    hjem = {
+      url = "github:feel-co/hjem";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
 
   outputs = {nixpkgs, ...} @ inputs: let
     system = "x86_64-linux"; # Hjem only supports NixOS currently
