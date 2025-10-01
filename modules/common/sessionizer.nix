@@ -6,11 +6,14 @@
   ...
 }: let
   inherit (tsunamiLib) scriptPath filePath;
-  cfg = config.sessionizer;
+  cfg = config.tsunami.sessionizer;
 in {
   options = {
     tsunami.sessionizer = {
-      enable = lib.mkEnableOption "sessionizer";
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+      };
     };
   };
 
@@ -27,7 +30,7 @@ in {
       "sessionizer" =
         # bash
         ''
-          [ -z "$1" ] || exit
+          [ -z "$1" ] && exit
 
           selected="$1"
           session_name="$(basename "$selected" | tr '.' '_')"
@@ -70,19 +73,19 @@ in {
         '';
     };
     tsunami.files = {
-      "broot_sessionizer.toml" = (pkgs.formats.toml {}).generate "file.toml" {
+      "broot_sessionizer.toml" = builtins.readFile ((pkgs.formats.toml {}).generate "file.toml" {
         imports = ["~/.config/broot/conf.toml"]; # inherit from user's config
         quit_on_cancel = true;
         verbs = [
           {
             invocation = "session";
-            external = ''bash -c -- "${scriptPath "pick-session"} '{file}'"'';
+            external = ''bash -c -- "${scriptPath "sessionizer"} '{file}'"'';
             key = "enter";
             apply_to = "directory";
             leave_broot = true;
           }
         ];
-      };
+      });
     };
   };
 }

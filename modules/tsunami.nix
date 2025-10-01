@@ -5,6 +5,7 @@
   ...
 }: let
   inherit (lib) mkOption mkEnableOption;
+  cfg = config.tsunami;
 in {
   imports = lib.filesystem.listFilesRecursive ./common;
 
@@ -24,7 +25,7 @@ in {
       };
 
       confs = mkOption {
-        types = lib.types.attrsOf (lib.types.str);
+        type = lib.types.attrsOf (lib.types.str);
       };
     };
   };
@@ -32,7 +33,7 @@ in {
   config = {
     files =
       (
-        config.tsunami.scripts
+        cfg.scripts
         |> builtins.mapAttrs (name: value: {
           name = ".config/tmux/scripts/${name}.sh";
           value = {
@@ -40,22 +41,25 @@ in {
             executable = true;
           };
         })
+        |> lib.attrValues
         |> builtins.listToAttrs
       )
       // (
-        config.tsunami.files
+        cfg.files
         |> builtins.mapAttrs (name: value: {
           name = ".config/tmux/files/${name}";
           value.text = value;
         })
+        |> lib.attrValues
         |> builtins.listToAttrs
       )
       // (
-        config.tsunami.confs
+        cfg.confs
         |> builtins.mapAttrs (name: value: {
           name = ".config/tmux/conf.d/${name}.conf";
           value.text = value;
         })
+        |> lib.attrValues
         |> builtins.listToAttrs
       );
 

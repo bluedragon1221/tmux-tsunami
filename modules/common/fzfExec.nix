@@ -10,7 +10,10 @@
 in {
   options = {
     tsunami.fzfExec = {
-      enable = lib.mkEnableOption "fzf-exec";
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+      };
     };
   };
 
@@ -45,7 +48,7 @@ in {
     tsunami.keys.global = [
       {
         key = "M-x";
-        exec = "${scriptPath "minibuffer"} -h 10 ${scriptPath "fzf-exec"}";
+        exec = "run-shell '${scriptPath "minibuffer"} -h 10 ${scriptPath "fzf-exec"}'";
       }
     ];
   };

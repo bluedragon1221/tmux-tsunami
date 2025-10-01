@@ -15,7 +15,7 @@
       tsunami = import ./default.nix {
         inherit (nixpkgs) lib;
         inherit pkgs inputs;
-        tsunamiLib = import ./lib.nix;
+        tsunamiLib = import ./lib.nix {inherit (nixpkgs) lib;};
       };
       default = tsunami;
     };

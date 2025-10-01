@@ -44,7 +44,7 @@ in {
     }
     {
       name = "Reload";
-      key = "C-d";
+      key = "C-r";
       exec = "source-file ~/.config/tmux/tmux.conf";
     }
   ];
