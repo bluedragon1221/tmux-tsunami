@@ -1,23 +1,12 @@
 {
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    hjem = {
-      url = "github:feel-co/hjem";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-  };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs";
+  outputs = inputs: {
+    hjemModules.tsunami = ./modules/hjem.nix;
 
-  outputs = {nixpkgs, ...} @ inputs: let
-    system = "x86_64-linux"; # Hjem only supports NixOS currently
-    pkgs = import nixpkgs {inherit system;};
-  in {
-    hjemModules = rec {
-      tsunami = import ./default.nix {
-        inherit (nixpkgs) lib;
-        inherit pkgs inputs;
-        tsunamiLib = import ./lib.nix {inherit (nixpkgs) lib;};
-      };
-      default = tsunami;
-    };
+    packages."x86_64-linux".tsunamiInstaller = let
+      installer = import ./modules/installer.nix {pkgs = import inputs.nixpkgs {system = "x86_64-linux";};};
+    in
+      # installer.moduleConfig;
+      installer.mkInstaller;
   };
 }
