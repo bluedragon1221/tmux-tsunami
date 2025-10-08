@@ -36,7 +36,7 @@ in {
           session_name="$(basename "$selected" | tr '.' '_')"
 
           # if the session doesn't exist, create it
-          if tmux list-sessions -F '#{session_name}' | grep -vqx "$session_name"; then
+          if ! tmux has-session -t "$session_name"; then
             tmux new-session -ds "$session_name" -c "$selected"
             tmux set-option -t "$session_name" @default-path "$selected"
           fi
